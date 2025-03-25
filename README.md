@@ -1,2 +1,4 @@
 # TestAutomate
-Ini test eclipse IDE
+Berikut untuk PreTest-Automation Testing
+
+Run semua test ada pada 
