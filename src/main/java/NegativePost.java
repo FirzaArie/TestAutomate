@@ -6,17 +6,21 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.Select;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+import org.junit.jupiter.api.Test;
 public class NegativePost {
-
+@Test
     public static void main(String[] args) {
-        // Set the path of the GeckoDriver executable
-        System.setProperty("webdriver.gecko.driver", "D:/chromedriver-win64/geckodriver.exe");
+	
+    System.setProperty("webdriver.gecko.driver", "D:/chromedriver-win64/geckodriver.exe");
 
-        // Create FirefoxOptions instance
-        FirefoxOptions options = new FirefoxOptions();
-
-        // Create a new instance of the Firefox driver with options
-        WebDriver driver = new FirefoxDriver(options);
+    FirefoxOptions options = new FirefoxOptions();
+    Properties properties = new Properties();
+    WebDriver driver = new FirefoxDriver(options);
+            
         try {
             // Launch the Google website
             driver.get("https://gorest.co.in/rest-console");
@@ -44,12 +48,24 @@ public class NegativePost {
             Thread.sleep(3000);
             
             // Insert the header with Authorized Key
-            headerElement.sendKeys("Bearer 1e3ef4fb1616451f028408f9a842e511ead09824b23ca320ab2c8f744e729b1e");
-            System.out.println("Header Done");          
-            Thread.sleep(3000);
+            try {
+                FileInputStream input = new FileInputStream("config.properties");
+                properties.load(input);
+                String token = properties.getProperty("github.token");
+                headerElement.sendKeys("Bearer " + token);
+                System.out.println("GitHub Token: " + token);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Thread.sleep(3000);          
          
             // Insert the body with the correct message
-            bodyElement.sendKeys("");            
+            bodyElement.sendKeys("{"
+            		+ "  \"name\": \"Testing1\","
+            		+ "  \"email\": \"testing_testing@testing3.example\","
+            		+ "  \"gender\": \"female\","
+            		+ "  \"status\": \"active\""
+            		+ "}");            
             System.out.println("Body Done");
             Thread.sleep(3000);
                         

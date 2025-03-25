@@ -1,4 +1,10 @@
-package testjava;
+package testautomate;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -6,19 +12,16 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.Select;
-import org.junit.jupiter.api.Test;
-public class Post {
-	@Test
-    public static void main(String[] args) {
-        // Set the path of the GeckoDriver executable
+
+public class POST {
+    @Test
+    public void post() {
+
         System.setProperty("webdriver.gecko.driver", "D:/chromedriver-win64/geckodriver.exe");
 
-        // Create FirefoxOptions instance
         FirefoxOptions options = new FirefoxOptions();
-
-        // Create a new instance of the Firefox driver with options
+        Properties properties = new Properties();
         WebDriver driver = new FirefoxDriver(options);
-        
         try {
             // Launch the Google website
             driver.get("https://gorest.co.in/rest-console");
@@ -46,14 +49,21 @@ public class Post {
             Thread.sleep(3000);
             
             // Insert the header with Authorized Key
-            headerElement.sendKeys("Bearer 1e3ef4fb1616451f028408f9a842e511ead09824b23ca320ab2c8f744e729b1e");
-            System.out.println("Header Done");          
-            Thread.sleep(3000);
+            try {
+                FileInputStream input = new FileInputStream("config.properties");
+                properties.load(input);
+                String token = properties.getProperty("github.token");
+                headerElement.sendKeys("Bearer " + token);
+                System.out.println("GitHub Token: " + token);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Thread.sleep(3000);          
          
             // Insert the body with the correct message
             bodyElement.sendKeys("{"
             		+ "  \"name\": \"Testing1\","
-            		+ "  \"email\": \"testing_testing@testing3.example\","
+            		+ "  \"email\": \"testing_testing@testing7.example\","
             		+ "  \"gender\": \"female\","
             		+ "  \"status\": \"active\""
             		+ "}");            
@@ -65,6 +75,7 @@ public class Post {
             Thread.sleep(5000);
             
             String statusText = statusElement.getText();
+            System.out.println("Expected : 200");
             System.out.println(statusText);
             Thread.sleep(3000);
             
